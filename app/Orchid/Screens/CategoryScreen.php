@@ -47,7 +47,7 @@ class CategoryScreen extends Screen
             ModalToggle::make('Add category')
             ->modal('categoryModal')
             ->method('create')
-            ->type(Color::DARK)
+            ->type(Color::PRIMARY)
             ->icon('plus'),
         ];
     }

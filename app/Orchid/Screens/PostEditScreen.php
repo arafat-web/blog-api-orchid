@@ -5,25 +5,22 @@ namespace App\Orchid\Screens;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
-use App\Orchid\Screens\User\UserListScreen;
 use Illuminate\Http\Request;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Quill;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\TextArea;
+use Orchid\Screen\Fields\Upload;
 use Orchid\Screen\Screen;
+use Orchid\Support\Color;
 use Orchid\Support\Facades\Alert;
 use Orchid\Support\Facades\Layout;
 
 class PostEditScreen extends Screen
 {
-   /**
-     * Fetch data to be displayed on the screen.
-     *
-     * @return array
-     */
     public $post;
+
     public function query(Post $post): iterable
     {
         return [
@@ -31,47 +28,34 @@ class PostEditScreen extends Screen
         ];
     }
 
-    /**
-     * The name of the screen displayed in the header.
-     *
-     * @return string|null
-     */
     public function name(): ?string
     {
         return $this->post->exists ? 'Edit Post' : 'Create Post';
     }
 
-    /**
-     * The screen's action buttons.
-     *
-     * @return \Orchid\Screen\Action[]
-     */
     public function commandBar(): array
     {
         return [
-
-            Button::make('Create Post')
+            Button::make('Save Post')
                 ->icon('pencil')
                 ->method('createOrUpdate')
+                ->type(Color::PRIMARY())
                 ->canSee(!$this->post->exists),
 
             Button::make('Update Post')
                 ->icon('note')
                 ->method('createOrUpdate')
+                ->type(Color::SUCCESS())
                 ->canSee($this->post->exists),
 
             Button::make('Remove')
                 ->icon('trash')
                 ->method('remove')
+                ->type(Color::DANGER())
                 ->canSee($this->post->exists),
         ];
     }
 
-    /**
-     * The screen's layout elements.
-     *
-     * @return \Orchid\Screen\Layout[]|string[]
-     */
     public function layout(): iterable
     {
         return [
@@ -98,19 +82,28 @@ class PostEditScreen extends Screen
                 Quill::make('post.body')
                     ->title('Body')
                     ->placeholder('Enter body here'),
+                Upload::make('post.attachment')
+                    ->title('Upload Image')
+                    ->acceptedFiles('image/*')
             ])
         ];
     }
+
     public function createOrUpdate(Request $request)
     {
         $this->post->fill($request->get('post'))->save();
+        $this->post->attachment()->syncWithoutDetaching(
+            $request->input('post.attachment', [])
+        );
         Alert::info('You have successfully created a post.');
+
         return redirect()->route('platform.post.list');
     }
 
     public function remove()
     {
         $this->post->delete();
+        $this->post->attachment()->delete();
         Alert::info('You have successfully deleted the post.');
         return redirect()->route('platform.post.list');
     }

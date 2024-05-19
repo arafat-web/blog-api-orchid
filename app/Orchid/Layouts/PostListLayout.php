@@ -36,9 +36,13 @@ class PostListLayout extends Table
                         ->style('text-decoration: underline;')
                         ->route('platform.post.edit', $post->id);
                 }),
+            TD::make('image', 'Image')
+                ->render(function (Post $post) {
+                    $image = $post->attachment()->first();
+                    return '<image src="' . $image->url() . '" width="80" height="80"/>';
+                }),
 
             TD::make('slug', 'Slug'),
-            TD::make('description', 'Description'),
             TD::make('Category')
                 ->render(function (Post $post) {
                     return $post->category->name;

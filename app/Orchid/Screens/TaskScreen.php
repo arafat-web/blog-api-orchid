@@ -52,7 +52,8 @@ class TaskScreen extends Screen
             ModalToggle::make('Create Task')
                 ->modal('taskModal')
                 ->method('create')
-                ->icon('plus'),
+                ->icon('plus')
+                ->type(Color::PRIMARY()),
         ];
     }
 

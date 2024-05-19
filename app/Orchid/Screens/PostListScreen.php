@@ -6,10 +6,11 @@ use App\Orchid\Layouts\PostListLayout;
 use App\Models\Post;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
+use Orchid\Support\Color;
 
 class PostListScreen extends Screen
-{ 
-    
+{
+
     public function query(): array
     {
         return [
@@ -41,13 +42,14 @@ class PostListScreen extends Screen
     public function commandBar(): array
     {
         return [
-            Link::make('Create new')
-                ->icon('pencil')
+            Link::make('Add New Post')
+                ->type(Color::PRIMARY)
+                ->icon('plus')
                 ->route('platform.post.edit')
         ];
     }
 
- 
+
     public function layout(): array
     {
         return [
