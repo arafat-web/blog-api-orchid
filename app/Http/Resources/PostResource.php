@@ -22,7 +22,7 @@ class PostResource extends JsonResource
             'body' => $this->body,
             'image' => $this->attachment()->first()->url ?? null,
             'author' => $this->user->name,
-            'created_at' => $this->created_at->diffForHumans(),
+            'date' => $this->created_at->diffForHumans(),
         ];
     }
 }
