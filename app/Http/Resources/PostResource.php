@@ -21,7 +21,8 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'body' => $this->body,
             'image' => $this->attachment()->first()->url ?? null,
-            'author' => $this->user->name
+            'author' => $this->user->name,
+            'created_at' => $this->created_at->diffForHumans(),
         ];
     }
 }
