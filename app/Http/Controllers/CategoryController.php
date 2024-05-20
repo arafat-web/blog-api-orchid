@@ -11,7 +11,8 @@ class CategoryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $categories = Category::orderBy('created_at', 'desc')->get();
+        $categories = Category::with('posts', 'posts.user')->orderBy('created_at', 'desc')->get();
+        // return response()->json($categories);
         return response()->json([
             'categories' => CategoryResource::collection($categories)
         ]);
